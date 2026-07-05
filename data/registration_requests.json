@@ -1,0 +1,79 @@
+[
+    {
+        "username": "faculty",
+        "email": "patel4555@gmail.com",
+        "password": "123",
+        "full_name": "Dhruv Savani",
+        "profession": "ABC",
+        "approved": true,
+        "status": "approved",
+        "status_updated_at": "2025-11-19T17:06:43.387127+00:00"
+    },
+    {
+        "username": "d",
+        "email": "patel4555@gmail.com",
+        "password": "123",
+        "full_name": "p",
+        "profession": "c",
+        "approved": true,
+        "status": "approved",
+        "status_updated_at": "2025-11-26T08:38:39.002127+00:00"
+    },
+    {
+        "username": null,
+        "email": "savani@gmail.com",
+        "password": "123",
+        "full_name": "Dhruv Savani",
+        "profession": "ABC",
+        "approved": false
+    },
+    {
+        "username": null,
+        "email": "dhruv@gmail.com",
+        "password": "123",
+        "full_name": "Dhruv Savani",
+        "profession": "ABC",
+        "approved": false
+    },
+    {
+        "username": null,
+        "email": "jrxrs134@gmail.com",
+        "password": "123",
+        "full_name": "john jason",
+        "profession": "hod",
+        "approved": false
+    },
+    {
+        "username": "123",
+        "email": "jrst@gmail.com",
+        "password": "123",
+        "full_name": "john",
+        "profession": "jcnj",
+        "approved": true,
+        "status": "approved",
+        "submitted_at": "2025-11-19T17:07:58.001602+00:00",
+        "status_updated_at": "2025-11-19T17:08:21.824849+00:00"
+    },
+    {
+        "username": "jason",
+        "email": "jason@gmail.com",
+        "password": "1",
+        "full_name": "1",
+        "profession": "administrator",
+        "approved": true,
+        "status": "approved",
+        "submitted_at": "2025-11-22T16:12:33.306531+00:00",
+        "status_updated_at": "2025-11-22T16:12:48.562998+00:00"
+    },
+    {
+        "username": "10",
+        "email": "abbas@123",
+        "password": "123",
+        "full_name": "abbas",
+        "profession": "django",
+        "approved": true,
+        "status": "approved",
+        "submitted_at": "2025-11-25T19:10:04.299871+00:00",
+        "status_updated_at": "2025-11-25T19:10:16.770737+00:00"
+    }
+]

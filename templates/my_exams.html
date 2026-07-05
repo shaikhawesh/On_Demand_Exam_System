@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Exams</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; background:#0c101b; color:#e8ecf6; }
+    .wrap { max-width:900px; margin:40px auto; }
+    table { width:100%; border-collapse:collapse; background:#121826; border-radius:12px; overflow:hidden }
+    th, td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.04) }
+    th { text-align:left; color:#9aa4bf }
+    a.btn { padding:8px 10px; background:#8b5cf6; color:#041024; border-radius:8px; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; justify-content:center; white-space:nowrap; }
+    button.btn { padding:10px 16px; background:#8b5cf6; color:#041024; border-radius:8px; border:none; font-weight:700; cursor:pointer; font-size:14px; }
+    button.btn:disabled { opacity:0.7; cursor:not-allowed; }
+    .download-all { margin:20px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h2>My Exams</h2>
+    {% if records %}
+    <div class="download-all">
+      {% if pdf_enabled %}
+        <form method="POST" action="{% url 'download_multiple_exams' %}" style="display:inline;">
+          {% csrf_token %}
+          {% for r in records %}
+            <input type="hidden" name="filenames" value="{{ r.file }}">
+          {% endfor %}
+          <button type="submit" class="btn">Download All Exams as PDF</button>
+        </form>
+      {% else %}
+        <button class="btn" disabled style="opacity:0.7;cursor:not-allowed">PDF not available</button>
+      {% endif %}
+    </div>
+    <table>
+      <thead>
+        <tr><th>Subject</th><th>Date</th><th>Saved At</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.subject }}</td>
+          <td>{{ r.date }}</td>
+          <td>{{ r.saved_at_display|default:r.saved_at }}</td>
+          <td>
+            {% if pdf_enabled %}
+              <a href="{% url 'download_exam' filename=r.file %}?format=pdf" class="btn">Download PDF</a>
+            {% else %}
+              <a href="{% url 'download_exam' filename=r.file %}" class="btn">Download JSON</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p style="color:#9aa4bf">No exam records found.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c101b;
+      --card: #121826;
+      --muted: #9aa4bf;
+      --text: #e8ecf6;
+      --brand: #8b5cf6;   /* violet */
+      --brand-2: #06b6d4; /* cyan */
+      --ring: rgba(139, 92, 246, .28);
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .main {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+    }
+    .sidebar {
+      width: 250px;
+      background: var(--card);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .user-box {
+      display: block;
+      padding: 12px 20px;
+      margin: 10px 0;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #041024;
+      border-radius: 10px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 6px 18px var(--ring);
+      transition: transform .15s ease, opacity .2s ease;
+    }
+    .user-box:hover { opacity: .92; transform: translateY(-1px); }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px 20px 32px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      width: 106.3%;
+      box-sizing: border-box;
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      display: inline-block;
+      vertical-align: middle;
+      height: 56px;
+      line-height: 56px;
+      padding: 0 24px;
+      color: var(--text);
+      background: none;
+      border-radius: 0;
+      box-shadow: none;
+      min-width: 0;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: none;
+      cursor: pointer;
+    }
+    .profile .circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #041024;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border: 2px solid rgba(255,255,255,.18);
+    }
+    .profile .circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
+    }
+    .profile-dropdown {
+      position: relative;
+    }
+    .profile-dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      z-index: 1;
+      min-width: 260px;
+      min-height: 120px;
+      max-width: 320px;
+      max-height: 260px;
+      overflow-y: auto;
+      {% comment %} display: flex; {% endcomment %}
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-dropdown-content a {
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .profile-dropdown-content .username {
+      display: block;
+      padding: 12px 0 16px 0;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      margin-bottom: 10px;
+      cursor: default;
+      user-select: text;
+      font-size: 1.2rem;
+      width: 100%;
+      text-align: center;
+      word-break: break-all;
+    }
+    .profile-dropdown-content a:hover {
+      background: var(--brand);
+      color: #041024;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      max-width: 500px;
+      margin: 40px auto 0 auto;
+      text-align: center;
+    }
+    /* Calendar */
+    .calendar {
+      width: min(1100px, 92vw);
+      height: 640px;
+      margin: 30px 0 30px 40px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+    .calendar__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .calendar__title { font-weight: 700; font-size: 1.1rem; }
+    .calendar__nav {
+      display: flex; gap: 8px;
+    }
+    .calendar__btn {
+      background: rgba(255,255,255,.03); color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 6px 10px; border-radius: 10px; cursor: pointer;
+    }
+    .calendar__btn:hover { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #041024; }
+    .calendar__grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: auto repeat(6, 1fr);
+      padding: 10px 14px 16px;
+      gap: 8px;
+      flex: 1;
+    }
+    .calendar__dow { color: var(--muted); font-weight: 600; text-align: center; padding: 6px 0; }
+    .calendar__day {
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 12px; padding: 8px; text-align: right; min-height: 78px;
+      position: relative; color: var(--text);
+      background: rgba(255,255,255,.02);
+    }
+    .calendar__day--muted { color: var(--muted); opacity: .7; }
+    .calendar__day--today { outline: 2px solid var(--brand-2); outline-offset: -2px; background: rgba(6,182,212,.08); }
+    .calendar__day--selected { outline: 3px solid var(--brand); outline-offset: -3px; box-shadow: 0 0 0 2px rgba(139,92,246,.15) inset; }
+
+  /* available dates set by admin */
+  .calendar__day--available { box-shadow: 0 6px 18px rgba(6,182,212,.06); border: 2px solid rgba(6,182,212,.12); }
+
+    /* Right drawer */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+    }
+    .drawer {
+      position: fixed; top: 0; right: 0; height: 100vh; width: 420px; max-width: 92vw;
+      background: var(--card); border-left: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow); transform: translateX(100%); transition: transform .25s ease;
+      display: flex; flex-direction: column;
+    }
+    .drawer--open { transform: translateX(0); }
+    .drawer-overlay--open { display: block; }
+    .drawer__header { padding: 18px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; justify-content: space-between; }
+    .drawer__title { font-weight: 700; font-size: 1.1rem; }
+    .drawer__body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .label { color: var(--text); font-size: .95rem; font-weight: 500; }
+    .input {
+      background: rgba(255,255,255,.08); color: var(--text);
+      border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 10px 12px;
+      font-size: 1rem;
+    }
+    .select {
+      background-color: rgba(255,255,255,.08);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e8ecf6' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: 10px 36px 10px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      transition: all 0.2s ease;
+      min-height: 42px;
+    }
+    .select:hover {
+      background-color: rgba(255,255,255,.12);
+      border-color: rgba(139, 92, 246, .4);
+    }
+    .select:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--ring);
+      background-color: rgba(255,255,255,.1);
+    }
+    .select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: rgba(255,255,255,.03);
+    }
+    .select option {
+      background: var(--card);
+      color: var(--text);
+      padding: 10px 12px;
+    }
+    .select option:checked {
+      background: var(--brand);
+      color: #041024;
+    }
+    .select option:hover {
+      background: rgba(139, 92, 246, .3);
+    }
+    .actions { margin-top: 8px; display: flex; gap: 10px; }
+    .btn { border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer; font-weight: 700; }
+    .btn--primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #041024; box-shadow: 0 6px 18px var(--ring); }
+    .btn--ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.15); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+  <h2>
+    <span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg, var(--brand), var(--brand-2));border-radius:50%;margin-right:12px;font-size:1.3rem;box-shadow:0 2px 8px var(--ring);color:#fff;">🎓</span>
+  Welcome, <span style="font-weight:700;">{{ request.user.profile.display_name|default:request.user.username }}</span>
+  </h2>
+      <div style="display:flex;align-items:center;">
+        <!-- Notification button -->
+        <a id="notif-btn" href="{% url 'notification_details' %}" target="_blank" style="margin-left:900px;background:var(--brand);color:#fff;border:none;border-radius:50%;width:38px;height:38px;box-shadow:0 2px 8px var(--ring);font-size:1.3rem;cursor:pointer;position:relative;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">
+          <span id="notif-dot" style="display:none;position:absolute;top:6px;right:6px;width:10px;height:10px;background:#06b6d4;border-radius:50%;"></span>
+          🔔
+        </a>
+      </div>
+      <div class="profile profile-dropdown" onclick="toggleProfileDropdown()">
+  <div class="circle">
+    {% if request.user.profile and request.user.profile.avatar_url %}
+      <img src="{{ request.user.profile.avatar_url }}" alt="avatar" />
+    {% else %}
+      {{ request.user.profile.display_name|default:request.user.username|slice:":1"|upper }}
+    {% endif %}
+  </div>
+        <div class="profile-dropdown-content" id="profile-dropdown-content">
+          <div class="username">{{ request.user.profile.display_name|default:request.user.username }}</div>
+          <a href="{% url 'logout' %}">Logout</a>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="sidebar">
+        <h3>User</h3>
+  <a href="{% url 'profile' %}" class="user-box">Profile</a>
+  <a href="#" class="user-box" onclick="openExamDrawerForToday(event)">Exam</a>
+  <a href="{% url 'exam_results' %}" class="user-box">Results</a>
+      </div>
+      <div class="main-content">
+        <div class="content">
+          <div class="calendar">
+            <div class="calendar__header">
+              <div class="calendar__title" id="cal-title">Month YYYY</div>
+              <div class="calendar__nav">
+                <button class="calendar__btn" id="cal-prev" type="button">Prev</button>
+                <button class="calendar__btn" id="cal-today" type="button">Today</button>
+                <button class="calendar__btn" id="cal-next" type="button">Next</button>
+              </div>
+            </div>
+            <div class="calendar__grid" id="cal-grid">
+              <!-- days of week + days injected by script -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Right Drawer -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="drawer" id="exam-drawer" aria-hidden="true">
+    <div class="drawer__header">
+      <div class="drawer__title">Select Exam</div>
+      <button class="btn btn--ghost" id="drawer-close" type="button">Close</button>
+    </div>
+    <div class="drawer__body">
+      <div class="field">
+        <div class="label">Date</div>
+        <input class="input" id="drawer-date" type="text" readonly />
+      </div>
+      <div class="field">
+        <label class="label" for="subject-select">Subject</label>
+        <select class="select" id="subject-select">
+          <option value="" selected disabled>Select a subject</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button class="btn btn--primary" type="button" id="drawer-save">Save</button>
+        <button class="btn btn--ghost" type="button" id="drawer-cancel">Cancel</button>
+      </div>
+    </div>
+  </aside>
+  <!-- Hidden form to ensure CSRF cookie is set -->
+  <form style="display:none" method="post">
+    {% csrf_token %}
+  </form>
+  <script>
+    // Calendar logic
+    (function() {
+      const titleEl = document.getElementById('cal-title');
+      const gridEl = document.getElementById('cal-grid');
+      const prevBtn = document.getElementById('cal-prev');
+      const nextBtn = document.getElementById('cal-next');
+      const todayBtn = document.getElementById('cal-today');
+
+      const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+      let viewDate = new Date();
+
+      let selected = null; // { y, m, d }
+      let availableDates = new Set(); // ISO dates YYYY-MM-DD
+
+      // load available unlock slots from server
+      async function loadAvailableSlots() {
+        try {
+          const resp = await fetch("/api/unlock_slots/");
+          const data = await resp.json();
+          if (resp.ok && data && data.success && Array.isArray(data.slots)) {
+            data.slots.forEach(s => {
+              if (s.date) {
+                availableDates.add(s.date);
+              }
+            });
+            console.log('Loaded available dates:', Array.from(availableDates));
+          } else {
+            console.warn('Failed to load slots:', data);
+          }
+        } catch (e) {
+          console.error('Error loading available slots:', e);
+          // ignore network errors; calendar will simply show no available dates
+        }
+      }
+      // don't render calendar yet — load slots first and then render
+
+      // Semester and Subject mapping (for loading subjects based on user's semester)
+      const semesterSubjects = {
+        semester1: ['SDOT', 'WDT', 'C'],
+        semester2: ['Advance C', 'DBMS', 'Java Script', 'SDWT'],
+        semester3: ['Advance SP', 'Java', 'Data Structures', 'PHP'],
+        semester4: ['OS', 'Python', 'BS-R', 'UML', 'Laravel'],
+        semester5: ['Django', 'DWDM', 'FON', 'UI/UX']
+      };
+
+  function openDrawerFor(dateObj, iso) {
+        // Prevent opening drawer for past dates
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const sel = new Date(dateObj.getTime()); sel.setHours(0,0,0,0);
+        if (sel < today) {
+          alert('Cannot book a previous date. Only today or future dates allowed.');
+          return;
+        }
+        const overlay = document.getElementById('drawer-overlay');
+        const drawer = document.getElementById('exam-drawer');
+        const dateInput = document.getElementById('drawer-date');
+        const subjectSelect = document.getElementById('subject-select');
+        const headerEl = document.querySelector('.header');
+        const headerH = headerEl ? headerEl.offsetHeight : 0;
+  const y = dateObj.getFullYear();
+  const m = monthNames[dateObj.getMonth()];
+  const d = String(dateObj.getDate()).padStart(2, '0');
+  dateInput.value = `${d} ${m} ${y}`;
+  // store ISO date on the input for form submission
+  if (iso) dateInput.dataset.iso = iso; else dateInput.dataset.iso = `${y}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${d}`;
+        // Load subjects for user's semester
+        const userSemester = '{{ user_semester|default:"" }}';
+        if (userSemester && semesterSubjects[userSemester]) {
+          subjectSelect.innerHTML = '<option value="" selected disabled>Select a subject</option>';
+          semesterSubjects[userSemester].forEach(function(subject) {
+            const option = document.createElement('option');
+            option.value = subject;
+            option.textContent = subject;
+            subjectSelect.appendChild(option);
+          });
+          subjectSelect.disabled = false;
+        } else {
+          subjectSelect.innerHTML = '<option value="" selected disabled>No semester selected or subjects not available</option>';
+          subjectSelect.disabled = true;
+        }
+        // Position drawer and overlay below header
+        drawer.style.top = headerH + 'px';
+        overlay.style.top = headerH + 'px';
+        overlay.style.height = `calc(100vh - ${headerH}px)`;
+        overlay.classList.add('drawer-overlay--open');
+        drawer.classList.add('drawer--open');
+      }
+
+      function closeDrawer() {
+        document.getElementById('drawer-overlay').classList.remove('drawer-overlay--open');
+        document.getElementById('exam-drawer').classList.remove('drawer--open');
+      }
+
+      function openExamDrawerForToday(event) {
+        if (event) event.preventDefault();
+        const today = new Date();
+        const iso = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        openDrawerFor(today, iso);
+      }
+
+      document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+      document.getElementById('drawer-cancel').addEventListener('click', closeDrawer);
+      document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+
+      function renderCalendar() {
+        const year = viewDate.getFullYear();
+        const month = viewDate.getMonth();
+        titleEl.textContent = `${monthNames[month]} ${year}`;
+
+        gridEl.innerHTML = '';
+        // Days of week
+        for (let i = 0; i < 7; i++) {
+          const dow = document.createElement('div');
+          dow.className = 'calendar__dow';
+          dow.textContent = dayNames[i];
+          gridEl.appendChild(dow);
+        }
+
+        const firstOfMonth = new Date(year, month, 1);
+        const startDay = firstOfMonth.getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrev = new Date(year, month, 0).getDate();
+
+        // Leading days from previous month
+        for (let i = startDay - 1; i >= 0; i--) {
+          const d = document.createElement('div');
+          d.className = 'calendar__day calendar__day--muted';
+          d.textContent = daysInPrev - i;
+          gridEl.appendChild(d);
+        }
+        // Current month days
+        const today = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+          const d = document.createElement('div');
+          d.className = 'calendar__day';
+          d.textContent = day;
+          if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            d.classList.add('calendar__day--today');
+          }
+          const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          if (availableDates.has(iso)) {
+            d.classList.add('calendar__day--available');
+          }
+          if (selected && selected.y === year && selected.m === month && selected.d === day) {
+            d.classList.add('calendar__day--selected');
+          }
+          d.addEventListener('click', () => {
+            selected = { y: year, m: month, d: day };
+            renderCalendar();
+            // Check if date is in the past
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const clickedDate = new Date(year, month, day);
+            clickedDate.setHours(0,0,0,0);
+            if (clickedDate < today) {
+              alert('Cannot book a previous date. Only today or future dates allowed.');
+              return;
+            }
+            // Allow booking for any future date (backend will auto-create slot if needed)
+            // Visual indicator: dates with existing slots have calendar__day--available class
+            openDrawerFor(new Date(year, month, day), iso);
+          });
+          gridEl.appendChild(d);
+        }
+        // Fill remaining cells to total 42 (6 weeks)
+        const cellsUsed = 7 + startDay + daysInMonth; // 7 DOW + leading + month days
+        const totalCells = 49; // 7 DOW + 42 day cells
+        const trailing = totalCells - cellsUsed;
+        for (let i = 1; i <= trailing; i++) {
+          const d = document.createElement('div');
+          d.className = 'calendar__day calendar__day--muted';
+          d.textContent = i;
+          gridEl.appendChild(d);
+        }
+      }
+
+      prevBtn.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalendar(); });
+      nextBtn.addEventListener('click', () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalendar(); });
+      todayBtn.addEventListener('click', () => { viewDate = new Date(); renderCalendar(); });
+
+      // Load available slots then render calendar (fallback to render if load fails)
+      loadAvailableSlots().then(function(){ 
+        console.log('Slots loaded, rendering calendar');
+        renderCalendar(); 
+      }).catch(function(err){ 
+        console.error('Error loading slots:', err);
+        renderCalendar(); 
+      });
+    })();
+    function toggleProfileDropdown() {
+      const profileDropdownContent = document.getElementById('profile-dropdown-content');
+      // Only toggle on click, never open automatically
+      if (profileDropdownContent) {
+        profileDropdownContent.style.display = profileDropdownContent.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+    document.addEventListener('click', function (event) {
+      const profileDropdownContent = document.getElementById('profile-dropdown-content');
+      if (!event.target.closest('.profile-dropdown')) {
+        profileDropdownContent.style.display = 'none';
+      }
+    });
+
+    // CSRF + Save handler
+    (function(){
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+      const saveBtn = document.getElementById('drawer-save');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', async function(){
+          const dateEl = document.getElementById('drawer-date');
+          const subjectEl = document.getElementById('subject-select');
+          // Ensure we always send an ISO date (YYYY-MM-DD).
+          // Prefer dataset.iso (set when user clicks a calendar cell). If missing,
+          // try to deterministically parse the displayed value 'DD Month YYYY'.
+          let dateISO = '';
+          try {
+            if (dateEl && dateEl.dataset && dateEl.dataset.iso) {
+              dateISO = dateEl.dataset.iso;
+            } else if (dateEl && dateEl.value) {
+              // Try to parse formats like '14 November 2025' or '14 Nov 2025'
+              const parts = dateEl.value.trim().split(/\s+/);
+              if (parts.length >= 3) {
+                const day = parts[0].padStart(2, '0');
+                const monthName = parts[1];
+                const year = parts[2];
+                const monthMap = {January:1,February:2,March:3,April:4,May:5,June:6,July:7,August:8,September:9,October:10,November:11,December:12,
+                                  Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+                const m = monthMap[monthName] || monthMap[monthName.replace('.', '')];
+                if (m) {
+                  dateISO = year + '-' + String(m).padStart(2,'0') + '-' + day;
+                } else {
+                  // final fallback to Date parser
+                  const parsed = new Date(dateEl.value);
+                  if (!isNaN(parsed.getTime())) dateISO = parsed.toISOString().slice(0,10);
+                }
+              } else {
+                const parsed = new Date(dateEl.value);
+                if (!isNaN(parsed.getTime())) dateISO = parsed.toISOString().slice(0,10);
+              }
+            }
+          } catch (e) {
+            dateISO = '';
+          }
+          const date = dateISO || '';
+          const subject = (subjectEl && subjectEl.value) || '';
+          const semester = '{{ user_semester|default:"" }}';
+          if (!date || !subject) {
+            alert('Please select a date and subject.');
+            return;
+          }
+          if (!semester) {
+            alert('No semester found. Please contact administrator.');
+            return;
+          }
+          // client-side: reject past dates (date is in ISO format YYYY-MM-DD)
+          try {
+            const selDate = new Date(date + 'T00:00:00'); // Add time to avoid timezone issues
+            const now = new Date();
+            now.setHours(0,0,0,0);
+            selDate.setHours(0,0,0,0);
+            if (isNaN(selDate.getTime())) {
+              throw new Error('Invalid date');
+            }
+            if (selDate < now) {
+              alert('Cannot book a previous date. Only today or future dates allowed.');
+              return;
+            }
+          } catch (e) {
+            alert('Invalid date format.');
+            return;
+          }
+          const csrftoken = getCookie('csrftoken');
+          try {
+            const resp = await fetch("{% url 'save_exam' %}", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken || ''
+              },
+              body: JSON.stringify({ date: date, subject: subject, semester: semester })
+            });
+            const data = await resp.json();
+            if (resp.ok && data && data.success) {
+              alert('Saved! File: ' + (data.file || 'created'));
+              // Close drawer on success
+              const overlay = document.getElementById('drawer-overlay');
+              const drawer = document.getElementById('exam-drawer');
+              overlay && overlay.classList.remove('drawer-overlay--open');
+              drawer && drawer.classList.remove('drawer--open');
+            } else {
+              // Include server-side 'received' and 'detail' when available to aid debugging
+              var msg = (data && data.error) ? data.error : 'Unknown error';
+              if (data && data.received) msg += '\nServer received: ' + data.received;
+              if (data && data.detail) msg += '\nDetail: ' + data.detail;
+              alert('Failed to save: ' + msg);
+            }
+          } catch (e) {
+            alert('Network error while saving.');
+          }
+        });
+      }
+    })();
+
+    // Notification logic
+    (function(){
+      var notifDot = document.getElementById('notif-dot');
+      if (notifDot) {
+        notifDot.style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>

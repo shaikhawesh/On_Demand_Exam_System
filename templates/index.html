@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ExamEase – On‑Demand Exam System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220;          /* page background */
+      --card:#121a2b;        /* card background */
+      --muted:#93a1bd;       /* secondary text */
+      --text:#e7ecf7;        /* primary text */
+      --brand:#5b8cff;       /* brand primary */
+      --brand-2:#7dd3ff;     /* brand accent */
+      --ring:rgba(125,211,255,.3);
+      --max:1200px;
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      background: radial-gradient(1200px 600px at 20% -10%,rgba(93,155,255,.25),transparent 60%),
+                  radial-gradient(900px 500px at 80% -10%,rgba(125,211,255,.18),transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+
+    /* container */
+    .wrap{max-width:var(--max); margin-inline:auto; padding:0 20px}
+
+    /* nav */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(11,18,32,.75), rgba(11,18,32,.35));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav__row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 0}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.3px}
+    .brand__logo{width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); box-shadow:0 6px 20px rgba(91,140,255,.45)}
+    .menu{display:flex; gap:22px; align-items:center}
+    .menu a{opacity:.9}
+    .menu a:hover{opacity:1}
+    .cta{display:flex; gap:10px}
+    .btn{padding:10px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:#0f1729; color:var(--text); box-shadow: inset 0 0 0 1px rgba(255,255,255,.03)}
+    .btn:hover{border-color:rgba(255,255,255,.16)}
+    .btn--primary{background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#041024; border:none; box-shadow:0 10px 22px var(--ring)}
+
+    /* hero */
+    .hero{padding:80px 0 40px}
+    .hero__grid{display:grid; grid-template-columns:1.2fr .8fr; gap:40px; align-items:center}
+    .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:.85rem; color:var(--muted); background:rgba(125,211,255,.08); padding:6px 10px; border-radius:999px; border:1px solid rgba(125,211,255,.18)}
+    h1{margin:14px 0 10px; font-size:clamp(2.1rem, 4vw + .5rem, 3.5rem); line-height:1.15}
+    .lead{font-size:1.05rem; color:#c9d6f3; max-width:60ch}
+    .hero__cta{margin-top:22px; display:flex; gap:12px; flex-wrap:wrap}
+    .mock{
+      border-radius:var(--radius); overflow:hidden; background:linear-gradient(180deg,#0f1a2f,#0a1222); border:1px solid rgba(255,255,255,.06); box-shadow:var(--shadow)
+    }
+    .mock__top{display:flex; gap:8px; padding:12px; border-bottom:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg,rgba(255,255,255,.06),transparent)}
+    .dot{width:10px;height:10px;border-radius:999px;background:#ff6b6b}
+    .dot:nth-child(2){background:#ffd166}
+    .dot:nth-child(3){background:#06d6a0}
+    .mock__body{padding:18px}
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.9rem; color:#cfe3ff; white-space:pre-wrap
+    }
+
+    /* badges / trusted */
+    .bar{display:flex; gap:28px; align-items:center; justify-content:center; flex-wrap:wrap; padding:26px 12px; border-radius:var(--radius); margin:34px 0; background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.06)}
+    .bar span{color:var(--muted)}
+
+    /* feature grid */
+    .section{padding:56px 0}
+    .section h2{font-size:clamp(1.6rem,2.2vw + .7rem,2.4rem); margin:0 0 14px}
+    .kicker{color:var(--muted); margin-bottom:22px}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); position:relative; overflow:hidden}
+    .card h3{margin:8px 0 6px; font-size:1.15rem}
+    .card p{color:#c6d3ee}
+    .badge{position:absolute; inset:auto 12px 12px auto; padding:4px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.08); color:#bcd2ff; font-size:.78rem; background:rgba(91,140,255,.1)}
+
+    /* two column */
+    .two{display:grid; grid-template-columns: 1.05fr .95fr; gap:26px; align-items:center}
+    .panel{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+
+    /* CTA strip */
+    .cta-strip{margin:56px 0; border-radius:var(--radius); padding:28px; background:linear-gradient(135deg,rgba(91,140,255,.25),rgba(125,211,255,.18)); border:1px solid rgba(255,255,255,.14); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap}
+
+    /* footer */
+    footer{margin-top:60px; border-top:1px solid rgba(255,255,255,.06); background:linear-gradient(180deg, rgba(255,255,255,.02), transparent)}
+    .foot{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:26px; padding:28px 0}
+    .foot h4{margin:0 0 10px; font-size:1rem}
+    .foot a{color:#c9d6f3; opacity:.9}
+    .foot a:hover{opacity:1}
+    .copy{display:flex; align-items:center; justify-content:space-between; padding:18px 0; color:var(--muted); font-size:.92rem}
+
+    /* responsive */
+    @media (max-width: 980px){
+      .hero__grid{grid-template-columns:1fr}
+      .two{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr 1fr}
+      .foot{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .menu{display:none}
+      .grid{grid-template-columns:1fr}
+      .foot{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap nav__row">
+      <a class="brand" href="#home">
+        <span class="brand__logo" aria-hidden="true"></span>
+        <span>ExamEase</span>
+      </a>
+      <div class="menu" role="navigation" aria-label="Main">
+        <a href="#features">Features</a>
+        <a href="#platform">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="cta">
+        <a class="btn" href="{% url 'login' %}">Login</a>
+        <a class="btn btn--primary" href="{% url 'register' %}">Register</a>
+        <a class="btn btn--primary" href="{% url 'admin_login' %}">Admin Login</a>
+        <a class="btn btn--primary" href="{% url 'faculty_login' %}">Faculty Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="home" class="hero">
+    <div class="wrap hero__grid">
+      <div>
+        <span class="eyebrow">On‑Demand Exam System • Secure • Scalable</span>
+        <h1>Redefine your assessment experience</h1>
+        <p class="lead">Deliver proctored tests at any time and on any device. Integrate with your LMS, automate grading, and keep academic integrity front and center.</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#get-started">Start now</a>
+          <a class="btn" href="#features">Explore features</a>
+        </div>
+        <div class="bar" aria-label="Trusted by">
+          <span>Trusted by institutions worldwide</span>
+          <span>•</span>
+          <span>99.9% uptime</span>
+          <span>•</span>
+          <span>Responsive on all devices</span>
+        </div>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <div class="mock__top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="mock__body">
+          <pre class="code">$ python manage.py startapp exams
+$ python manage.py migrate
+$ python manage.py runserver
+
+✔ Proctoring enabled
+✔ Secure item bank loaded
+✔ Webhooks configured</pre>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURE GRID -->
+  <section id="features" class="section">
+    <div class="wrap">
+      <h2>Innovative exam solutions</h2>
+      <p class="kicker">Everything you need to create, deliver, and monitor assessments at scale.</p>
+      <div class="grid">
+        <article class="card">
+          <span class="badge">Security</span>
+          <h3>Secure delivery</h3>
+          <p>Lockdown mode, session recording, and AI‑assisted anomaly detection protect exam integrity.</p>
+        </article>
+        <article class="card">
+          <span class="badge">Proctoring</span>
+          <h3>Advanced proctoring</h3>
+          <p>Live, record‑and‑review, and automated proctoring options with detailed violation reports.</p>
+        </article>
+        <article class="card">
+          <span class="badge">Flexibility</span>
+          <h3>Anytime access</h3>
+          <p>Schedule windows or true on‑demand availability with timezone‑aware controls.</p>
+        </article>
+        <article class="card">
+          <span class="badge">Integration</span>
+          <h3>Seamless integration</h3>
+          <p>One‑click SSO and LMS sync (Moodle, Canvas, Blackboard) via standards‑based APIs.</p>
+        </article>
+        <article class="card">
+          <span class="badge">Insights</span>
+          <h3>Real‑time monitoring</h3>
+          <p>Dashboards for live session status, queue health, and proctor workload.</p>
+        </article>
+        <article class="card">
+          <span class="badge">Reporting</span>
+          <h3>Comprehensive analytics</h3>
+          <p>Item analysis, score distributions, and export to CSV/JSON for warehousing.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- TWO COLUMN ABOUT -->
+  <section id="platform" class="section">
+    <div class="wrap two">
+      <div class="panel">
+        <h2>About our platform</h2>
+        <p>Built for reliability and scale, ExamEase simplifies exam creation and delivery for both educators and students. From randomized question banks to instant feedback, it streamlines every step.</p>
+        <ul>
+          <li>Adaptive assessments with personalized feedback</li>
+          <li>Automated scoring and rubric support</li>
+          <li>Role‑based permissions for staff and proctors</li>
+          <li>WCAG‑aware, keyboard‑friendly UI</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>Why it stands out</h2>
+        <p>Deploy quickly, operate confidently. Our observability and alerting keep you informed, while sensible defaults make setup effortless.</p>
+        <ul>
+          <li>Global availability and CDN edge delivery</li>
+          <li>Audit trails and immutable logs</li>
+          <li>Scales from small cohorts to nationwide exams</li>
+          <li>REST & webhooks for custom workflows</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA STRIP -->
+  <section id="get-started" class="wrap cta-strip">
+    <div>
+      <h3 style="margin:0">Ready to transform assessment?</h3>
+      <p style="margin:6px 0 0; color:#e1ecff">Start with our guided setup and launch your first secure exam today.</p>
+    </div>
+    <div class="cta">
+      <a class="btn" href="#contact" onclick="alert('Coming soon')">Talk to us</a>
+      <a class="btn btn--primary" href="{% url 'register' %}">Create an account</a>
+    <a class="btn" href="{% url 'admin_login' %}">Admin</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="wrap foot">
+      <div>
+        <div class="brand" style="margin-bottom:8px"><span class="brand__logo"></span><span>ExamEase</span></div>
+        <p style="color:#c9d6f3; max-width:46ch">Dedicated support and guidance for a smooth rollout and ongoing optimization of your on‑demand exam system.</p>
+      </div>
+      <div>
+        <h4>Quick links</h4>
+        <div style="display:grid; gap:8px">
+          <a href="#home">Home</a>
+          <a href="#platform">About</a>
+          <a href="#features">Features</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <div style="display:grid; gap:8px">
+          <a href="#">User guides</a>
+          <a href="#">FAQs</a>
+          <a href="#">Case studies</a>
+          <a href="#">Webinars</a>
+        </div>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <div style="display:grid; gap:8px">
+          <a href="#">Privacy policy</a>
+          <a href="#">Terms of service</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Sitemap</a>
+        </div>
+      </div>
+    </div>
+    <div class="wrap copy">
+      <span>© 2025 ExamEase, Inc. All rights reserved.</span>
+      <span><a href="#">Legal</a></span>
+    </div>
+  </footer>
+</body>
+</html>

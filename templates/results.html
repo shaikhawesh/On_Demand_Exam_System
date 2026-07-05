@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --muted:#9aa6c2;
+      --text:#eef2fb;
+      --accent:#7dd3ff;
+      --accent-2:#5b8cff;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      background:var(--bg); color:var(--text); min-height:100vh; padding:32px;
+    }
+    header{
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+      margin-bottom:24px;
+    }
+    h1{margin:0; font-size:1.8rem;}
+    .btn{
+      border:none; border-radius:12px; padding:10px 16px; font-weight:600; cursor:pointer;
+      text-decoration:none; color:#041024; background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    }
+    .card{
+      background:var(--card); border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.08); padding:20px; overflow-x:auto;
+    }
+    table{
+      width:100%; border-collapse:collapse; min-width:720px;
+    }
+    th,td{
+      padding:12px 10px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left;
+    }
+    th{
+      text-transform:uppercase; letter-spacing:.05em; font-size:.85rem; color:var(--muted);
+    }
+    tbody tr:last-child td{border-bottom:none;}
+    .status-pill{
+      padding:4px 10px; border-radius:999px; font-size:.8rem; font-weight:600;
+      display:inline-flex; align-items:center;
+    }
+    .status-pill--graded{background:rgba(125,211,255,.2); color:var(--accent);}
+    .empty{
+      padding:40px; text-align:center; color:var(--muted); font-size:1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Your Published Results</h1>
+    <a class="btn" href="{% url 'dashboard' %}">← Back to dashboard</a>
+  </header>
+
+  <div class="card">
+    {% if results %}
+      <table>
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Semester</th>
+            <th>Marks</th>
+            <th>Attempt</th>
+            <th>Remarks</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+          <tr>
+            <td>
+              <strong>{{ result.subject }}</strong><br>
+              <span style="color:var(--muted); font-size:.85rem;">{{ result.exam_date|default:"Date not set" }}</span>
+            </td>
+            <td>{{ result.semester|default:"—" }}</td>
+            <td>
+              {% if result.marks_obtained %}
+                {{ result.marks_obtained }}{% if result.max_marks %} / {{ result.max_marks }}{% endif %}
+              {% else %}
+                Pending
+              {% endif %}
+            </td>
+            <td>
+              <span class="status-pill status-pill--graded">{{ result.attempt_id }}</span>
+            </td>
+            <td>{{ result.remarks|default:"—" }}</td>
+            <td>
+              <div style="font-size:.85rem; color:var(--muted);">
+                {{ result.graded_at|date:"M d, Y H:i" }}<br>
+                <span>By {{ result.graded_by|default:"Faculty" }}</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty">
+        Marks haven't been published yet. Please check again later.
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; background:#0c101b; color:#e8ecf6; }
+    .card { background:#121826; max-width:680px; margin:40px auto; padding:22px; border-radius:12px; }
+    .avatar { width:120px; height:120px; border-radius:50%; background:#222; display:inline-block; vertical-align:middle; overflow:hidden; }
+    .avatar img { width:100%; height:100%; object-fit:cover; }
+    .meta { display:inline-block; vertical-align:middle; margin-left:18px; }
+    a.btn { display:inline-block; margin-top:12px; padding:10px 14px; background:#8b5cf6; color:#041024; border-radius:8px; text-decoration:none; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div>
+      <div class="avatar">
+        {% if profile and profile.avatar_url %}
+          <img src="{{ profile.avatar_url }}" alt="Avatar">
+        {% else %}
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;">{{ user.username|slice:":1"|upper }}</div>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <div style="font-size:1.4rem;font-weight:700;">{{ profile.display_name|default:user.username }}</div>
+        <div style="color:#9aa4bf;margin-top:6px;">{{ user.email }}</div>
+        {% if profile.full_name %}
+          <div style="color:#9aa4bf;margin-top:6px;">Full name: <strong>{{ profile.full_name }}</strong></div>
+        {% endif %}
+        {% if profile.enrollment %}
+          <div style="color:#9aa4bf;margin-top:6px;">Enrollment: <strong>{{ profile.enrollment }}</strong></div>
+        {% endif %}
+        <div>
+          <a class="btn" href="{% url 'edit_profile' %}">Edit Profile</a>
+          <a class="btn" href="{% url 'my_exams' %}" style="margin-left:8px;">My Exams</a>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,.06)">
+
+    <div>
+      <h3 style="margin:0 0 6px 0;">Account Details</h3>
+      <p style="color:#9aa4bf;margin:4px 0;">Username: <strong>{{ user.username }}</strong></p>
+      <p style="color:#9aa4bf;margin:4px 0;">Joined: <strong>{{ user.date_joined }}</strong></p>
+      <p style="color:#9aa4bf;margin:4px 0;">Email: <strong>{{ user.email }}</strong></p>
+    </div>
+  </div>
+</body>
+</html>

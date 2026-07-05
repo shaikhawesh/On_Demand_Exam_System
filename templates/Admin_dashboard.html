@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #121a2b;
+      --muted: #93a1bd;
+      --text: #e7ecf7;
+      --brand: #5b8cff;
+      --brand-2: #7dd3ff;
+      --ring: rgba(125, 211, 255, .3);
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .main {
+      display: flex;
+      flex: 1;
+    }
+    .sidebar {
+      width: 250px;
+      background: var(--card);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .dropdown {
+      cursor: pointer;
+      padding: 10px;
+      background: var(--brand);
+      border-radius: var(--radius);
+      text-align: center;
+      font-weight: bold;
+      color: #041024;
+    }
+    .dropdown:hover {
+      opacity: 0.9;
+    }
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      max-height: 45%; /* Set maximum height to 45% of the viewport height */
+      overflow-y: auto; /* Enable scrolling for overflow content */
+    }
+    .dropdown-content a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 10px;
+      background: var(--card);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .dropdown-content a:hover {
+      background: var(--brand);
+      color: #041024;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    /*.header {
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+      padding: 20px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }*/
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px 20px 32px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    /*.header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }*/
+    .header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--text);
+      padding: 0 16px;
+      background: none;
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1; /* allow the title to take available space */
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 976px; /* small gap from the title */
+      cursor: pointer;
+    }
+    .profile .circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #041024;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border: 2px solid var(--brand-2);
+    }
+    .profile-dropdown {
+      position: relative;
+    }
+    .profile-dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px); /* place the dropdown just below the profile */
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 8px;
+      z-index: 50;
+      min-width: 140px;
+    }
+    .profile-dropdown-content a {
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .profile-dropdown-content a:hover {
+      background: var(--brand);
+      color: #041024;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+    thead th {
+      background: rgba(255, 255, 255, .05);
+      font-weight: 600;
+    }
+    tbody tr:hover {
+      background: rgba(255, 255, 255, .03);
+    }
+    /* Dashboard stat box styles */
+    .stat-box {
+      background: rgba(255,255,255,.03);
+      padding: 18px;
+      border-radius: 12px;
+      color: var(--text);
+      min-width: 140px;
+      text-align: center;
+      position: relative;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      cursor: default;
+      overflow: hidden;
+    }
+    .stat-box .stat-title { font-size: 1rem; opacity: .9; }
+    .stat-box .stat-value { font-size: 1.6rem; font-weight: 800; margin-top: 6px; }
+    .stat-box:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(91,140,255, .12);
+      background: linear-gradient(180deg, rgba(91,140,255,.12), rgba(42,93,240,.06));
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .status-badge.status-approved { background: rgba(34,197,94,.15); color: #6ee7b7; }
+    .status-badge.status-pending { background: rgba(251,191,36,.15); color: #facc15; }
+    .status-badge.status-rejected { background: rgba(248,113,113,.15); color: #fca5a5; }
+    .faculty-actions form {
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .faculty-actions button {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-approve { background: #22c55e; color: #041024; }
+    .btn-reject { background: #ef4444; color: #fff; }
+    .btn-approve:disabled,
+    .btn-reject:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% load static %}
+    <div class="header">
+      <h2 style="display:flex;align-items:center;gap:12px;">
+        Welcome to the Admin Dashboard
+      </h2>
+      <div class="profile profile-dropdown" onclick="toggleProfileDropdown()">
+        <div class="circle">A</div>
+        <div class="profile-dropdown-content" id="profile-dropdown-content">
+          <a href="{% url 'logout' %}">Logout</a>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+    <div class="sidebar">
+  {% comment %} <h3>Admin Panel</h3> {% endcomment %}
+  <a href="#" onclick="showContent('dashboard')" class="user-box">Dashboard</a>
+  <a href="#" onclick="showContent('user-list')" class="user-box">User List</a>
+  <a href="#" onclick="showContent('faculty')" class="user-box">Faculty</a>
+  <a href="#" onclick="showContent('exam-records')" class="user-box">Exam Records</a>
+  <a href="#" onclick="showContent('unlock-dates')" class="user-box">Unlock Dates</a>
+  <a href="#" onclick="showContent('attendance')" class="user-box">Attendance</a>
+  <a href="#" onclick="showContent('attendance-report')" class="user-box">Download Report</a>
+  <a href="#" onclick="showContent('student-marks')" class="user-box">Student Marks</a>
+  <a href="#" onclick="showContent('download-attendance')" class="user-box">Download Attendance Sheet</a>
+    </div>
+      <div class="main-content">
+        <div class="content">
+          <div id="dashboard" class="card">
+            <!-- Stats area (kept separate from sidebar) -->
+            <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;">
+              <div class="stat-box">
+                <div class="stat-title">Total Students</div>
+                <div class="stat-value">{{ total_users }}</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-title">Total Applied Exams</div>
+                <div class="stat-value">{{ total_applied_exams }}</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-title">Active Users</div>
+                <div class="stat-value">{{ active_count }}</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-title">Inactive Users</div>
+                <div class="stat-value">{{ inactive_count }}</div>
+              </div>
+            </div>
+
+            <!-- Project Insights -->
+            <div style="background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow);margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <h3 style="margin:0">Project Insights</h3>
+                <small style="color:var(--muted)">Overview</small>
+              </div>
+              <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:140px;background:rgba(255,255,255,.02);padding:10px;border-radius:8px;text-align:center">
+                  <div style="color:var(--muted)">Avg Exams / User</div>
+                  <div style="font-weight:800;margin-top:6px">{{ project_insights.avg_exams_per_user|floatformat:2 }}</div>
+                </div>
+                <div style="flex:1;min-width:140px;background:rgba(255,255,255,.02);padding:10px;border-radius:8px;text-align:center">
+                  <div style="color:var(--muted)">Recent Active Sessions</div>
+                  <div style="font-weight:800;margin-top:6px">{{ project_insights.recent_active_sessions }}</div>
+                </div>
+                <div style="flex:1;min-width:140px;background:rgba(255,255,255,.02);padding:10px;border-radius:8px;text-align:center">
+                  <div style="color:var(--muted)">Data Files</div>
+                  <div style="font-weight:800;margin-top:6px">{{ project_insights.data_files }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+  <style>
+    .user-box {
+      display: block;
+      padding: 12px 20px;
+      margin: 10px 0;
+      background: #007bff;
+      color: #fff;
+      border-radius: 6px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .user-box:hover {
+      background: #0056b3;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      color: #fff;
+    }
+  </style>
+          <div id="user-list" class="card" style="display: none;">
+            <h4>User List</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user_status in users_with_status %}
+                  {% if user_status.user.id is not None %} <!-- Ensure the user exists -->
+                    <tr>
+                      <td>{{ user_status.user.username }}</td>
+                      <td>{{ user_status.user.email }}</td>
+                      <td>
+                        <a href="{% url 'edit_user' user_status.user.id %}">Edit</a> |
+                        <a href="{% url 'delete_user' user_status.user.id %}" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a> |
+                      </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div id="exam-records" class="card" style="display: none;">
+            <!-- CSRF token for AJAX requests -->
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+            <h4>Exam Records</h4>
+            {% if exam_records %}
+            <table style="width:100%; border-collapse:collapse; background:#121826; border-radius:12px; overflow:hidden">
+              <thead>
+                <tr style="background:#181f2f; color:#9aa4bf;">
+                  <th style="padding:12px 14px; text-align:left;">Username</th>
+                  <th style="padding:12px 14px; text-align:left;">Date</th>
+                  <th style="padding:12px 14px; text-align:left;">Subject</th>
+                  <th style="padding:12px 14px; text-align:left;">Saved At</th>
+                  <th style="padding:12px 14px; text-align:left;">File</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for rec in exam_records %}
+                <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                  <td style="padding:12px 14px;">{{ rec.username }}</td>
+                  <td style="padding:12px 14px;">{{ rec.date }}</td>
+                  <td style="padding:12px 14px;">{{ rec.subject }}</td>
+                  <td style="padding:12px 14px;">{{ rec.saved_at_display|default:rec.saved_at }}</td>
+                  <td style="padding:12px 14px;">{{ rec.file }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+              <p style="color: var(--muted);">No exam records found.</p>
+            {% endif %}
+          </div>
+          <div id="unlock-dates" class="card" style="display: none;">
+            <h4>Unlock Dates</h4>
+            {% if request.session.is_site_admin %}
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;">
+                <form method="post" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="create_slot" />
+                  <label style="display:flex;flex-direction:column;">
+                    Date (YYYY-MM-DD)
+                    <input name="date" type="date" required />
+                  </label>
+                  <button type="submit" style="padding:8px 12px;background:#06b6d4;border:none;border-radius:8px;color:#041024;font-weight:700;">Create Slot</button>
+                </form>
+              </div>
+
+              <!-- Admin interactive calendar -->
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                  <strong>Select dates on the calendar below (click to toggle). When done, press Publish.</strong>
+                  <div>
+                    <button id="admin-cal-prev" class="calendar__btn" type="button">Prev</button>
+                    <button id="admin-cal-today" class="calendar__btn" type="button">Today</button>
+                    <button id="admin-cal-next" class="calendar__btn" type="button">Next</button>
+                  </div>
+                </div>
+                <div id="admin-calendar" style="border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div id="admin-cal-title" style="font-weight:700"></div>
+                    <div>
+                      <button id="admin-publish" class="calendar__btn" type="button" style="background:#06b6d4;color:#041024;font-weight:800;">Publish</button>
+                    </div>
+                  </div>
+                  <div id="admin-cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;
+                      grid-auto-rows:72px;">
+                    <!-- days injected by script -->
+                  </div>
+                </div>
+                <div style="margin-top:8px;color:var(--muted);font-size:0.9rem;">Selected dates: <span id="admin-selected-count">0</span></div>
+              </div>
+            </div>
+            {% else %}
+              <p style="color:var(--muted)">You must be an admin to create unlock dates.</p>
+            {% endif %}
+
+            <h5 style="margin-top:12px">Existing Slots</h5>
+            {% if unlock_slots %}
+            <div style="overflow-x: auto; margin: 12px 0;">
+              <table id="unlock-slots-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                  <tr style="background: rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.1);">
+                    <th style="padding: 12px; text-align: left;">Date</th>
+                    <th style="padding: 12px; text-align: left;">Subject</th>
+                    <th style="padding: 12px; text-align: left;">Time</th>
+                    <th style="padding: 12px; text-align: center;">Capacity</th>
+                    <th style="padding: 12px; text-align: center;">Booked</th>
+                    <th style="padding: 12px; text-align: center;">Active</th>
+                    <th style="padding: 12px; text-align: center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for s in unlock_slots %}
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,.05); hover-color: rgba(255,255,255,.08);">
+                    <td style="padding: 12px;">{{ s.date }}</td>
+                    <td style="padding: 12px;">{{ s.subject|default:"—" }}</td>
+                    <td style="padding: 12px;">
+                      {% if s.start_time and s.end_time %}
+                        {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}
+                      {% else %}
+                        —
+                      {% endif %}
+                    </td>
+                    <td style="padding: 12px; text-align: center;">{{ s.capacity|default:"—" }}</td>
+                    <td style="padding: 12px; text-align: center;">{{ s.bookings.count }}</td>
+                    <td style="padding: 12px; text-align: center;">
+                      <span style="background: {% if s.is_active %}#22c55e{% else %}#ef4444{% endif %}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">
+                        {% if s.is_active %}Active{% else %}Inactive{% endif %}
+                      </span>
+                    </td>
+                    <td style="padding: 12px; text-align: center;">
+                      <button class="slot-edit-btn" data-slot-id="{{ s.id }}" style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px; font-size: 0.85rem;">Edit</button>
+                      <button class="slot-toggle-btn" data-slot-id="{{ s.id }}" style="background: #f59e0b; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px; font-size: 0.85rem;">
+                        {% if s.is_active %}Deactivate{% else %}Activate{% endif %}
+                      </button>
+                      <button class="slot-delete-btn" data-slot-id="{{ s.id }}" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Delete</button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+              <p style="color:var(--muted)">No unlock slots created yet.</p>
+            {% endif %}
+          </div>
+          <div id="attendance" class="card" style="display: none;">
+            <h4>Student Attendance</h4>
+            <div style="margin-bottom:16px;">
+              <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                <label style="display:flex;flex-direction:column;gap:6px;">
+                  <span style="font-weight:600;">Select Unlock Date:</span>
+                  <select id="attendance-slot-select" style="background:linear-gradient(135deg, #0f3460 0%, #533483 100%);color:var(--text);border:2px solid #7dd3ff;border-radius:10px;padding:10px 12px;font-size:1rem;cursor:pointer;box-shadow:0 0 10px rgba(125, 211, 255, 0.3);">
+                    <option value="" style="background:#0b1220;color:var(--text);">-- Select a date --</option>
+                    {% for slot in unlock_slots %}
+                    <option value="{{ slot.id }}" {% if today_slot_id and slot.id == today_slot_id %}selected{% endif %} style="background:#0b1220;color:var(--text);">{{ slot.date|date:"d M Y" }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label style="display:flex;flex-direction:column;gap:6px;">
+                  <span style="font-weight:600;">Select Subject:</span>
+                  {% if subject_options %}
+                  <select id="attendance-subject-select" style="min-width:220px;background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px;font-size:1rem;cursor:pointer;">
+                    <option value="">-- Select a subject --</option>
+                    {% for subject in subject_options %}
+                      <option value="{{ subject }}">{{ subject }}</option>
+                    {% endfor %}
+                  </select>
+                  {% else %}
+                  <div style="color:var(--muted);font-size:.9rem;">No subjects found yet. Record some exams first.</div>
+                  {% endif %}
+                </label>
+              </div>
+            </div>
+            <div id="attendance-content" style="display:none;">
+              <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px;font-weight:600;">
+                <div id="attendance-selected-date" style="display:none;">Selected date: <span id="attendance-selected-date-text"></span></div>
+                <div id="attendance-selected-subject" style="display:none;">Subject: <span id="attendance-selected-subject-text"></span></div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;">
+                <button id="attendance-save-btn" type="button" style="padding:8px 12px;background:#06b6d4;border:none;border-radius:8px;color:#041024;font-weight:700;display:none;">Save Attendance</button>
+                <button id="attendance-cancel-btn" type="button" style="padding:8px 12px;background:#374151;border:none;border-radius:8px;color:#e8ecf6;font-weight:600;display:none;">Cancel</button>
+              </div>
+              <table style="width:100%; border-collapse:collapse; background:#121826; border-radius:12px; overflow:hidden">
+                <thead>
+                  <tr style="background:#181f2f; color:#9aa4bf;">
+                    <th style="padding:12px 14px; text-align:left;">Username</th>
+                    <th style="padding:12px 14px; text-align:left;">Full Name</th>
+                    <th style="padding:12px 14px; text-align:left;">Enrollment</th>
+                    <th style="padding:12px 14px; text-align:left;">Status<br><span style="font-weight:600; font-size:0.9rem;">Absent</span> / <span style="font-weight:600; font-size:0.9rem;">Present</span></th>
+                  </tr>
+                </thead>
+                <tbody id="attendance-tbody">
+                  <!-- Attendance records will be inserted here -->
+                </tbody>
+              </table>
+            </div>
+            <div id="no-slot-message" style="color:var(--muted);text-align:center;padding:20px;">
+              Please select both a date and subject to view attendance
+            </div>
+          </div>
+          <div id="attendance-report" class="card" style="display: none;">
+            <h4>Generate Attendance Report</h4>
+            <div style="margin-bottom:16px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+              <label style="display:flex;flex-direction:column;gap:6px;">
+                <span style="font-weight:600;">Select Date:</span>
+                <select id="report-slot-select" style="background:linear-gradient(135deg, #0f3460 0%, #533483 100%);color:var(--text);border:2px solid #7dd3ff;border-radius:10px;padding:10px 12px;font-size:1rem;cursor:pointer;box-shadow:0 0 10px rgba(125, 211, 255, 0.3);">
+                  <option value="">-- Select a date --</option>
+                  {% for slot in unlock_slots %}
+                  <option value="{{ slot.id }}" data-date="{{ slot.date|date:'Y-m-d' }}">{{ slot.date|date:"d M Y" }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px;">
+                <span style="font-weight:600;">Subject (auto-populated):</span>
+                <select id="report-subject-select" style="background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px;font-size:1rem;cursor:pointer;min-width:200px;">
+                  <option value="">-- Select a subject --</option>
+                </select>
+              </label>
+              <button id="generate-report-btn" type="button" style="padding:8px 16px;background:#06b6d4;border:none;border-radius:8px;color:#041024;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer;" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Sheet
+              </button>
+            </div>
+            <div id="report-message" style="color:var(--muted);">Select a date to see available subjects, then select a subject and click "Download Sheet".</div>
+          </div>
+          <div id="student-marks" class="card" style="display: none;">
+            <h4 style="margin: 0 0 16px 0;">Student Marks</h4>
+            
+            <!-- Student marks content here -->
+            {% if student_marks %}
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; background:#121826; border-radius:12px; overflow:hidden">
+                <thead>
+                  <tr style="background:#181f2f; color:#9aa4bf;">
+                    <th style="padding:12px 14px; text-align:left;">Student</th>
+                    <th style="padding:12px 14px; text-align:left;">Subject</th>
+                    <th style="padding:12px 14px; text-align:left;">Semester</th>
+                    <th style="padding:12px 14px; text-align:left;">Exam Date</th>
+                    <th style="padding:12px 14px; text-align:left;">Marks</th>
+                    <th style="padding:12px 14px; text-align:left;">Remarks</th>
+                    <th style="padding:12px 14px; text-align:left;">Graded By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for result in student_marks %}
+                  <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                    <td style="padding:12px 14px;">{{ result.user.username }}</td>
+                    <td style="padding:12px 14px;">{{ result.subject }}</td>
+                    <td style="padding:12px 14px;">{{ result.semester|default:"-" }}</td>
+                    <td style="padding:12px 14px;">{{ result.exam_date|date:"d M Y"|default:"-" }}</td>
+                    <td style="padding:12px 14px;">
+                      {% if result.marks_obtained %}
+                        {{ result.marks_obtained }}{% if result.max_marks %} / {{ result.max_marks }}{% endif %}
+                      {% else %}
+                        -
+                      {% endif %}
+                    </td>
+                    <td style="padding:12px 14px;">{{ result.remarks|default:"-" }}</td>
+                    <td style="padding:12px 14px;">
+                      {{ result.graded_by|default:"-" }}
+                      <div style="font-size:0.85rem;color:var(--muted);">
+                        {{ result.graded_at|date:"d M Y H:i" }}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+              <p style="color:var(--muted);">No marks have been recorded yet.</p>
+            {% endif %}
+          </div>
+
+          <!-- Download Attendance Sheet Section -->
+          <div id="download-attendance" class="card" style="display: none;">
+            <h4 style="margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              Download Exam Attendance Sheet
+            </h4>
+            
+            <p style="margin-bottom: 16px; color: #94a3b8; font-size: 0.95rem;">
+              Select a date first, then the subject will auto-populate with exams scheduled for that date.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 16px;">
+              <div>
+                <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #e2e8f0;">Exam Date</label>
+                <select id="attendance-date" style="width: 100%; padding: 10px 12px; background: linear-gradient(135deg, #0f3460 0%, #533483 100%); color: var(--text); border: 2px solid #7dd3ff; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.2s; box-shadow: 0 0 10px rgba(125, 211, 255, 0.3);" required>
+                  <option value="">-- Select Exam Date --</option>
+                  {% for slot in unlock_slots %}
+                  <option value="{{ slot.date|date:'Y-m-d' }}">{{ slot.date|date:"d M Y" }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #e2e8f0;">Subject (auto-populated)</label>
+                <select id="attendance-subject" style="width: 100%; padding: 10px 12px; background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; font-size: 0.95rem; transition: border-color 0.2s;" required>
+                  <option value="">-- Select Subject --</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items:center;">
+              <button id="generate-attendance-btn" type="button" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background-color 0.2s;" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+              </button>
+              <div style="flex: 1; min-width: 120px;"></div>
+              <button id="preview-attendance-btn" type="button" style="padding: 10px 20px; background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-weight: 500; cursor: pointer;" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;margin-right:6px;">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+
+            <div id="download-status" style="margin-top: 12px; font-size: 0.9rem; display: none;">
+              <div style="display: flex; align-items: center; gap: 8px; color: #10b981;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>Generating PDF...</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="faculty" class="card" style="display: none;">
+            <h4>Faculty Approval Requests</h4>
+            <p style="color:var(--muted); margin-bottom:16px;">Review pending faculty registration submissions and approve or reject them.</p>
+            {% if registration_requests %}
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; background:#121826; border-radius:12px; overflow:hidden">
+                <thead>
+                  <tr style="background:#181f2f; color:#9aa4bf;">
+                    <th style="padding:12px 14px;">Faculty ID</th>
+                    <th style="padding:12px 14px;">Full Name</th>
+                    <th style="padding:12px 14px;">Email</th>
+                    <th style="padding:12px 14px;">Profession</th>
+                    <th style="padding:12px 14px;">Submitted</th>
+                    <th style="padding:12px 14px;">Status</th>
+                    <th style="padding:12px 14px;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for req in registration_requests %}
+                  <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                    <td style="padding:12px 14px;">{{ req.username|default:"-" }}</td>
+                    <td style="padding:12px 14px;">{{ req.full_name|default:"-" }}</td>
+                    <td style="padding:12px 14px;">{{ req.email|default:"-" }}</td>
+                    <td style="padding:12px 14px;">{{ req.profession|default:"-" }}</td>
+                    <td style="padding:12px 14px;">{{ req.submitted_at|default:"-" }}</td>
+                    <td style="padding:12px 14px;">
+                      {% with status=req.status|default:"pending" %}
+                        <span class="status-badge status-{{ status }}">{{ status|capfirst }}</span>
+                      {% endwith %}
+                    </td>
+                    <td style="padding:12px 14px;">
+                      <div class="faculty-actions">
+                        <form method="post" action="{% url 'approve_request' %}" style="margin-bottom:6px;">
+                          {% csrf_token %}
+                          <input type="hidden" name="username" value="{{ req.username }}">
+                          <input type="hidden" name="action" value="approve">
+                          <button type="submit" class="btn-approve" {% if req.status == 'approved' %}disabled{% endif %}>Approve</button>
+                        </form>
+                        <button type="button" class="btn-reject reject-faculty-btn" data-username="{{ req.username }}" {% if req.status == 'rejected' %}disabled{% endif %}>Reject</button>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+              <p style="color:var(--muted);">No faculty registration requests yet.</p>
+            {% endif %}
+            
+            <hr style="margin:32px 0; border:none; border-top:1px solid rgba(255,255,255,.1);">
+            
+            <h4 style="margin-top:24px;">Subject Assignment</h4>
+            <p style="color:var(--muted); margin-bottom:16px;">Assign subjects to approved faculty members for grading.</p>
+            
+            {% if approved_faculty %}
+            <div style="margin-bottom:24px;">
+              <form method="post" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="assign_subject">
+                <div style="flex:1;min-width:200px;">
+                  <label style="display:block;margin-bottom:6px;font-weight:600;">Select Faculty:</label>
+                  <select name="faculty_username" required style="width:100%;padding:10px 12px;background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.2);border-radius:10px;font-size:1rem;">
+                    <option value="">-- Select Faculty --</option>
+                    {% for faculty in approved_faculty %}
+                    <option value="{{ faculty.username }}">{{ faculty.username }} {% if faculty.first_name %}({{ faculty.first_name }}){% endif %}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div style="flex:1;min-width:200px;">
+                  <label style="display:block;margin-bottom:6px;font-weight:600;">Select Subject:</label>
+                  <select name="subject" required style="width:100%;padding:10px 12px;background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.2);border-radius:10px;font-size:1rem;">
+                    <option value="">-- Select Subject --</option>
+                    {% for subject in subject_options %}
+                    <option value="{{ subject }}">{{ subject }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <input type="hidden" name="assign_action" value="assign">
+                  <button type="submit" style="padding:10px 20px;background:#06b6d4;border:none;border-radius:10px;color:#041024;font-weight:700;cursor:pointer;">Assign Subject</button>
+                </div>
+              </form>
+            </div>
+            
+            <div style="overflow-x:auto;margin-top:24px;">
+              <h5 style="margin-bottom:12px;">Current Assignments</h5>
+              <table style="width:100%; border-collapse:collapse; background:#121826; border-radius:12px; overflow:hidden">
+                <thead>
+                  <tr style="background:#181f2f; color:#9aa4bf;">
+                    <th style="padding:12px 14px;">Faculty</th>
+                    <th style="padding:12px 14px;">Assigned Subjects</th>
+                    <th style="padding:12px 14px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in faculty_with_assignments %}
+                  <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+                    <td style="padding:12px 14px;">
+                      <strong>{{ item.faculty.username }}</strong><br>
+                      <span style="color:var(--muted);font-size:.85rem;">{{ item.faculty.first_name|default:"" }}</span>
+                    </td>
+                    <td style="padding:12px 14px;">
+                      {% if item.subjects %}
+                        {% for subject in item.subjects %}
+                        <span style="display:inline-block;padding:4px 10px;margin:4px;background:rgba(91,140,255,.2);border-radius:6px;font-size:.85rem;">{{ subject }}</span>
+                        {% endfor %}
+                      {% else %}
+                        <span style="color:var(--muted);">No subjects assigned</span>
+                      {% endif %}
+                    </td>
+                    <td style="padding:12px 14px;">
+                      {% if item.subjects %}
+                        {% for subject in item.subjects %}
+                        <form method="post" style="display:inline-block;margin:2px;">
+                          {% csrf_token %}
+                          <input type="hidden" name="action" value="assign_subject">
+                          <input type="hidden" name="faculty_username" value="{{ item.faculty.username }}">
+                          <input type="hidden" name="subject" value="{{ subject }}">
+                          <input type="hidden" name="assign_action" value="unassign">
+                          <button type="submit" style="padding:4px 10px;background:#dc2626;border:none;border-radius:6px;color:#fff;font-size:.8rem;cursor:pointer;">Remove {{ subject }}</button>
+                        </form>
+                        {% endfor %}
+                      {% else %}
+                        <span style="color:var(--muted);font-size:.85rem;">-</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+              <p style="color:var(--muted);">No approved faculty members yet. Approve faculty registrations first.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleDropdown() {
+      const dropdownContent = document.getElementById('dropdown-content');
+      if (!dropdownContent) return;
+      dropdownContent.style.display = dropdownContent.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function toggleProfileDropdown() {
+      const profileDropdownContent = document.getElementById('profile-dropdown-content');
+      if (!profileDropdownContent) return;
+      // toggle visibility
+      profileDropdownContent.style.display = profileDropdownContent.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showContent(contentId) {
+      const sections = document.querySelectorAll('.content .card');
+      sections.forEach(section => section.style.display = 'none'); // Hide all sections
+      const targetSection = document.getElementById(contentId);
+      if (targetSection) {
+        targetSection.style.display = 'block'; // Show the selected section
+      }
+      // update URL without reloading so user can bookmark
+      try {
+        const url = new URL(window.location);
+        url.searchParams.set('show', contentId);
+        window.history.replaceState({}, '', url);
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    document.addEventListener('click', function (event) {
+      const dropdownContent = document.getElementById('dropdown-content');
+      const profileDropdownContent = document.getElementById('profile-dropdown-content');
+
+      // Close dropdowns if clicked outside
+      if (dropdownContent && !event.target.closest('.dropdown')) {
+        dropdownContent.style.display = 'none';
+      }
+      if (profileDropdownContent && !event.target.closest('.profile-dropdown')) {
+        profileDropdownContent.style.display = 'none';
+      }
+    });
+
+    // Default to dashboard or respect ?show=<id>
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const show = params.get('show') || 'dashboard';
+      showContent(show);
+    }
+  </script>
+  <script>
+    // Admin calendar: multi-date select + Publish
+    (function(){
+      const titleEl = document.getElementById('admin-cal-title');
+      const gridEl = document.getElementById('admin-cal-grid');
+      const prevBtn = document.getElementById('admin-cal-prev');
+      const nextBtn = document.getElementById('admin-cal-next');
+      const todayBtn = document.getElementById('admin-cal-today');
+      const publishBtn = document.getElementById('admin-publish');
+      const selectedCountEl = document.getElementById('admin-selected-count');
+
+      if (!gridEl || !titleEl) return; // nothing to do for non-admins
+
+      const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+      let viewDate = new Date();
+      const selectedDates = new Set(); // ISO strings
+
+      function isoFor(year, month, day){
+        return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      }
+
+      function renderCalendar(){
+        const year = viewDate.getFullYear();
+        const month = viewDate.getMonth();
+        titleEl.textContent = `${monthNames[month]} ${year}`;
+        gridEl.innerHTML = '';
+
+        // DOW header
+        for (let i=0;i<7;i++){
+          const el = document.createElement('div');
+          el.style.textAlign = 'center';
+          el.style.fontWeight = '700';
+          el.style.padding = '6px 0';
+          el.style.color = 'var(--muted)';
+          el.textContent = dayNames[i];
+          gridEl.appendChild(el);
+        }
+
+        const firstOfMonth = new Date(year, month, 1);
+        const startDay = firstOfMonth.getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrev = new Date(year, month, 0).getDate();
+
+        // leading
+        for (let i = startDay - 1; i >= 0; i--) {
+          const d = document.createElement('div');
+          d.style.opacity = '0.6'; d.style.padding = '8px'; d.style.border = '1px solid rgba(255,255,255,.04)'; d.style.borderRadius='8px';
+          d.textContent = daysInPrev - i;
+          gridEl.appendChild(d);
+        }
+
+        const today = new Date(); today.setHours(0,0,0,0);
+        for (let day = 1; day <= daysInMonth; day++){
+          const cell = document.createElement('div');
+          cell.style.padding = '8px';
+          cell.style.border = '1px solid rgba(255,255,255,.04)';
+          cell.style.borderRadius = '8px';
+          cell.style.position = 'relative';
+          cell.style.cursor = 'pointer';
+          const iso = isoFor(year, month, day);
+          cell.textContent = day;
+          const cellDate = new Date(year, month, day); cellDate.setHours(0,0,0,0);
+          if (cellDate < today) {
+            cell.style.opacity = '0.5';
+            cell.style.cursor = 'not-allowed';
+          }
+          if (selectedDates.has(iso)){
+            cell.style.outline = '3px solid rgba(91,140,255,0.5)';
+            cell.style.background = 'rgba(91,140,255,0.06)';
+          }
+          cell.addEventListener('click', function(){
+            if (cellDate < today) return; // no past
+            if (selectedDates.has(iso)) selectedDates.delete(iso); else selectedDates.add(iso);
+            selectedCountEl.textContent = selectedDates.size;
+            renderCalendar();
+          });
+          gridEl.appendChild(cell);
+        }
+
+        // trailing cells to keep grid even (optional)
+        const cellsUsed = 7 + startDay + daysInMonth;
+        const totalCells = 7 + 42; // header + 42 day cells
+        const trailing = totalCells - cellsUsed;
+        for (let i=1;i<=trailing;i++){
+          const d = document.createElement('div');
+          d.style.opacity = '0.6'; d.style.padding='8px'; d.style.border='1px solid rgba(255,255,255,.04)'; d.style.borderRadius='8px';
+          d.textContent = i;
+          gridEl.appendChild(d);
+        }
+      }
+
+      prevBtn && prevBtn.addEventListener('click', function(){ viewDate.setMonth(viewDate.getMonth()-1); renderCalendar(); });
+      nextBtn && nextBtn.addEventListener('click', function(){ viewDate.setMonth(viewDate.getMonth()+1); renderCalendar(); });
+      todayBtn && todayBtn.addEventListener('click', function(){ viewDate = new Date(); renderCalendar(); });
+
+      function getCookie(name){
+        const v = `; ${document.cookie}`; const parts = v.split(`; ${name}=`); if (parts.length===2) return parts.pop().split(';').shift();
+      }
+
+      publishBtn && publishBtn.addEventListener('click', async function(){
+        if (selectedDates.size === 0) { alert('Select at least one date to publish.'); return; }
+        if (!confirm('Publish ' + selectedDates.size + ' date(s) as unlock slots?')) return;
+        const dates = Array.from(selectedDates).sort();
+        const csrftoken = getCookie('csrftoken') || '';
+        try {
+          const resp = await fetch('/api/admin_create_slots/', {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ dates: dates })
+          });
+          const data = await resp.json();
+          if (resp.ok && data && data.success) {
+            alert('Published ' + (data.created_count || dates.length) + ' slot(s).');
+            // reload to refresh table and state
+            window.location.reload();
+          } else {
+            alert('Failed to publish: ' + (data && data.error ? data.error : 'Unknown error'));
+          }
+        } catch (e) {
+          alert('Network error while publishing.');
+        }
+      });
+
+      // initial render
+      renderCalendar();
+      selectedCountEl.textContent = selectedDates.size;
+    })();
+
+    // Attendance tab functionality
+    (function(){
+      const slotSelect = document.getElementById('attendance-slot-select');
+      const subjectSelect = document.getElementById('attendance-subject-select');
+      const attendanceContent = document.getElementById('attendance-content');
+      const noSlotMessage = document.getElementById('no-slot-message');
+      const attendanceTbody = document.getElementById('attendance-tbody');
+      const csrftoken = getCookie('csrftoken') || '';
+
+      function getCookie(name){
+        const v = `; ${document.cookie}`; const parts = v.split(`; ${name}=`); if (parts.length===2) return parts.pop().split(';').shift();
+      }
+
+      if (!slotSelect || !subjectSelect) return;
+
+      async function loadAttendance(){
+        const slotId = slotSelect.value;
+        const subjectVal = (subjectSelect.value || '').trim();
+
+        if (!slotId || !subjectVal) {
+          attendanceContent.style.display = 'none';
+          noSlotMessage.style.display = 'block';
+          noSlotMessage.textContent = subjectSelect.options.length > 1
+            ? 'Please select both a date and subject to view attendance'
+            : 'Please select a date to view attendance';
+          const selDate = document.getElementById('attendance-selected-date');
+          if (selDate) selDate.style.display = 'none';
+          const selSubject = document.getElementById('attendance-selected-subject');
+          if (selSubject) selSubject.style.display = 'none';
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/get_attendance/' + slotId + '/?subject=' + encodeURIComponent(subjectVal), {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken
+            }
+          });
+
+          const data = await response.json();
+          if (response.ok && data.success) {
+            attendanceTbody.innerHTML = '';
+            data.records.forEach(function(record){
+              const row = document.createElement('tr');
+              row.style.borderBottom = '1px solid rgba(255,255,255,.04)';
+              // use radio buttons (mutually exclusive) for Absent/Present
+              const radioName = 'att_' + record.attendance_id;
+              row.innerHTML = `
+                <td style="padding:12px 14px;">${record.username}</td>
+                <td style="padding:12px 14px;">${record.full_name}</td>
+                <td style="padding:12px 14px;">${record.enrollment}</td>
+                <td style="padding:12px 14px;">
+                  <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;margin-right:12px;">
+                    <input type="radio" name="${radioName}" class="attendance-radio" data-attendance-id="${record.attendance_id}" value="absent" ${record.is_present ? '' : 'checked'} />
+                    <span>Absent</span>
+                  </label>
+                  <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="radio" name="${radioName}" class="attendance-radio" data-attendance-id="${record.attendance_id}" value="present" ${record.is_present ? 'checked' : ''} />
+                    <span>Present</span>
+                  </label>
+                </td>
+              `;
+              attendanceTbody.appendChild(row);
+            });
+
+            // Track changed records until Save is clicked
+            const changed = new Map();
+
+            document.querySelectorAll('.attendance-radio').forEach(function(radio){
+              radio.addEventListener('change', function(){
+                const id = this.dataset.attendanceId;
+                const isPresent = this.value === 'present';
+                changed.set(id, isPresent);
+                // enable save/cancel buttons
+                saveBtn.style.display = 'inline-block';
+                cancelBtn.style.display = 'inline-block';
+              });
+            });
+
+            // Save/Cancel button references
+            const saveBtn = document.getElementById('attendance-save-btn');
+            const cancelBtn = document.getElementById('attendance-cancel-btn');
+
+            // Save handler: send bulk updates
+            if (saveBtn) {
+              saveBtn.style.display = 'none';
+              saveBtn.onclick = async function(){
+                if (changed.size === 0) {
+                  alert('No changes to save.');
+                  return;
+                }
+                const updates = [];
+                changed.forEach((isPresent, attendanceId) => updates.push({ attendance_id: attendanceId, is_present: isPresent }));
+                try {
+                  const resp = await fetch('/api/update_attendance_bulk/', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                    body: JSON.stringify({ updates: updates })
+                  });
+                  const data = await resp.json();
+                  if (resp.ok && data && data.success) {
+                    alert('Attendance saved.');
+                    changed.clear();
+                    saveBtn.style.display = 'none';
+                    cancelBtn.style.display = 'none';
+                  } else {
+                    alert('Failed to save: ' + (data && data.error ? data.error : 'Unknown error'));
+                  }
+                } catch (e) {
+                  alert('Network error: ' + e);
+                }
+              };
+            }
+
+            // Cancel handler: reload attendance for selected slot
+            if (cancelBtn) {
+              cancelBtn.style.display = 'none';
+              cancelBtn.onclick = function(){
+                // reload the slot to revert changes
+                loadAttendance();
+              };
+            }
+
+            attendanceContent.style.display = 'block';
+            noSlotMessage.style.display = 'none';
+            // show selected date label (use option text which is formatted)
+            try {
+              const selTextEl = document.getElementById('attendance-selected-date-text');
+              const selContainer = document.getElementById('attendance-selected-date');
+              if (selTextEl && selContainer) {
+                selTextEl.textContent = slotSelect.options[slotSelect.selectedIndex].text || '';
+                selContainer.style.display = 'block';
+              }
+              const subjTextEl = document.getElementById('attendance-selected-subject-text');
+              const subjContainer = document.getElementById('attendance-selected-subject');
+              if (subjTextEl && subjContainer) {
+                subjTextEl.textContent = subjectSelect.options[subjectSelect.selectedIndex]?.text || subjectVal;
+                subjContainer.style.display = 'block';
+              }
+            } catch(e) {
+              // ignore
+            }
+          } else {
+            alert('Failed to load attendance: ' + (data.error || 'Unknown error'));
+          }
+        } catch (e) {
+          alert('Network error: ' + e);
+        }
+      }
+
+      slotSelect.addEventListener('change', loadAttendance);
+      subjectSelect.addEventListener('change', loadAttendance);
+
+      // Auto-load if both selections are pre-populated
+      if (slotSelect.value && subjectSelect.value) {
+        loadAttendance();
+      }
+
+      async function updateAttendance(attendanceId, isPresent) {
+        try {
+          const response = await fetch('/api/update_attendance/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+              attendance_id: attendanceId,
+              is_present: isPresent
+            })
+          });
+
+          const data = await response.json();
+          if (!response.ok || !data.success) {
+            alert('Failed to update attendance: ' + (data.error || 'Unknown error'));
+            location.reload();
+          }
+        } catch (e) {
+          alert('Network error: ' + e);
+        }
+      }
+    })();
+
+    // Attendance report generation
+    (function(){
+      const reportSelect = document.getElementById('report-slot-select');
+      
+      // Handle exam attendance PDF download
+      const generateBtn = document.getElementById('generate-attendance-btn');
+      const subjectSelect = document.getElementById('attendance-subject');
+      const dateInput = document.getElementById('attendance-date');
+      const previewBtn = document.getElementById('preview-attendance-btn');
+      
+      if (dateInput && subjectSelect) {
+        // Load exam subjects when date is selected
+        dateInput.addEventListener('change', async function() {
+          const examDate = this.value.trim();
+          subjectSelect.innerHTML = '<option value="">-- Select Subject --</option>';
+          generateBtn.disabled = true;
+          previewBtn.disabled = true;
+          
+          if (!examDate) {
+            return;
+          }
+          
+          try {
+            // Call API to get subjects for this date
+            const response = await fetch(`/api/get_subjects_for_date/?exam_date=${encodeURIComponent(examDate)}`);
+            const data = await response.json();
+            
+            if (response.ok && data.subjects && data.subjects.length > 0) {
+              data.subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
+              });
+            } else {
+              const option = document.createElement('option');
+              option.value = '';
+              option.textContent = '-- No subjects available for this date --';
+              option.disabled = true;
+              subjectSelect.appendChild(option);
+            }
+          } catch (error) {
+            console.error('Error fetching subjects:', error);
+            // Fallback - try to load all subjects
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = '-- Error loading subjects --';
+            option.disabled = true;
+            subjectSelect.appendChild(option);
+          }
+        });
+        
+        // Enable/disable button when subject is selected
+        subjectSelect.addEventListener('change', function() {
+          const hasDate = dateInput.value.trim() !== '';
+          const hasSubject = this.value.trim() !== '';
+          generateBtn.disabled = !(hasDate && hasSubject);
+          previewBtn.disabled = !(hasDate && hasSubject);
+        });
+        
+        // Generate PDF button
+        if (generateBtn) {
+          generateBtn.addEventListener('click', async function() {
+            const subject = subjectSelect.value.trim();
+            const examDate = dateInput.value.trim();
+            
+            if (!subject) {
+              alert('Please select a subject');
+              return;
+            }
+            
+            if (!examDate) {
+              alert('Please select an exam date');
+              return;
+            }
+            
+            try {
+              // Show loading status
+              const statusDiv = document.getElementById('download-status');
+              if (statusDiv) {
+                statusDiv.style.display = 'block';
+              }
+              
+              // Construct the URL for downloading the exam attendance sheet
+              const url = `/download_exam_attendance/?subject=${encodeURIComponent(subject)}&exam_date=${encodeURIComponent(examDate)}`;
+              
+              // First, check if the URL is accessible
+              const response = await fetch(url);
+              
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Server error: ${response.status}`);
+              }
+              
+              // If successful, trigger download
+              const blob = await response.blob();
+              const link = document.createElement('a');
+              link.href = window.URL.createObjectURL(blob);
+              link.download = `exam_attendance_${subject}_${examDate}.pdf`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              window.URL.revokeObjectURL(link.href);
+              
+              // Hide status after download
+              if (statusDiv) {
+                statusDiv.style.display = 'none';
+              }
+              
+              alert('Attendance sheet downloaded successfully!');
+            } catch (error) {
+              console.error('Error downloading attendance sheet:', error);
+              alert('Error downloading attendance sheet: ' + error.message);
+              const statusDiv = document.getElementById('download-status');
+              if (statusDiv) {
+                statusDiv.style.display = 'none';
+              }
+            }
+          });
+        }
+      }
+      const reportSubjectSelect = document.getElementById('report-subject-select');
+      const genBtn = document.getElementById('generate-report-btn');
+      const reportMessage = document.getElementById('report-message');
+
+      if (!genBtn || !reportSelect) return;
+
+      // When date is selected, load subjects for that date
+      reportSelect.addEventListener('change', async function(){
+        const slotId = reportSelect.value;
+        
+        // Clear subjects on default selection
+        if (!slotId) {
+          reportSubjectSelect.innerHTML = '<option value="">-- Select a subject --</option>';
+          genBtn.disabled = true;
+          reportMessage.textContent = 'Select a date to see available subjects.';
+          return;
+        }
+        
+        try {
+          const resp = await fetch('/api/get_subjects_by_date/?slot_id=' + slotId);
+          const data = await resp.json();
+          
+          if (resp.ok && data.subjects) {
+            // Populate subject dropdown
+            reportSubjectSelect.innerHTML = '<option value="">-- Select a subject --</option>';
+            data.subjects.forEach(subject => {
+              const opt = document.createElement('option');
+              opt.value = subject;
+              opt.textContent = subject;
+              reportSubjectSelect.appendChild(opt);
+            });
+            
+            if (data.subjects.length === 0) {
+              reportSubjectSelect.innerHTML = '<option value="">-- No subjects available for this date --</option>';
+              genBtn.disabled = true;
+              reportMessage.textContent = 'No exams found for the selected date.';
+            } else {
+              reportMessage.textContent = 'Select a subject and click "Download Sheet".';
+            }
+          } else {
+            alert('Error loading subjects: ' + (data.error || 'Unknown error'));
+          }
+        } catch (e) {
+          alert('Network error loading subjects.');
+        }
+      });
+      
+      // Enable/disable download button based on both date and subject selection
+      reportSubjectSelect.addEventListener('change', function(){
+        const slotId = reportSelect.value;
+        const subject = reportSubjectSelect.value;
+        genBtn.disabled = !(slotId && subject);
+      });
+
+      genBtn.addEventListener('click', async function(){
+        const slotId = reportSelect.value;
+        const subject = reportSubjectSelect.value;
+        
+        if (!slotId || !subject) {
+          alert('Please select both date and subject.');
+          return;
+        }
+
+        const url = '/download_exam_attendance/?exam_date=' + document.querySelector(`#report-slot-select option[value="${slotId}"]`).getAttribute('data-date') + '&subject=' + encodeURIComponent(subject);
+
+        try {
+          // fetch PDF as blob and trigger download
+          const resp = await fetch(url, { method: 'GET' });
+
+          if (!resp.ok) {
+            const data = await resp.json().catch(()=>null);
+            alert('Failed to generate report: ' + (data && data.error ? data.error : resp.statusText));
+            return;
+          }
+          const blob = await resp.blob();
+          const disposition = resp.headers.get('content-disposition') || '';
+          let filename = 'attendance_report.csv';
+          const m = /filename="?([^";]+)"?/.exec(disposition);
+          if (m) filename = m[1];
+
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = urlBlob;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+        } catch (e) {
+          alert('Network error: ' + e);
+        }
+      });
+    })();
+
+    // Unlock Slots management handlers
+    (function(){
+      function getCookie(name){
+        const v = `; ${document.cookie}`; const parts = v.split(`; ${name}=`); if (parts.length===2) return parts.pop().split(';').shift();
+      }
+      const csrftoken = getCookie('csrftoken') || '';
+
+      // Delete slot
+      document.addEventListener('click', function(e){
+        if (e.target.classList.contains('slot-delete-btn')) {
+          const slotId = e.target.getAttribute('data-slot-id');
+          if (!confirm('Are you sure you want to delete this slot? Associated bookings will be removed.')) return;
+          
+          fetch(`/api/delete_unlock_slot/${slotId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken }
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              // Find and remove the table row for this slot
+              const row = e.target.closest('tr');
+              if (row) {
+                row.style.opacity = '0.5';
+                row.style.textDecoration = 'line-through';
+                setTimeout(() => {
+                  row.remove();
+                }, 300);
+              }
+              alert('Slot deleted successfully.');
+            } else {
+              alert('Error: ' + (data.error || 'Unknown error'));
+            }
+          }).catch(err => alert('Network error: ' + err));
+        }
+      });
+
+      // Toggle active/inactive
+      document.addEventListener('click', function(e){
+        if (e.target.classList.contains('slot-toggle-btn')) {
+          const slotId = e.target.getAttribute('data-slot-id');
+          fetch(`/api/deactivate_unlock_slot/${slotId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken }
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              e.target.textContent = data.is_active ? 'Deactivate' : 'Activate';
+              const row = e.target.closest('tr');
+              const statusCell = row.querySelector('td:nth-child(6)');
+              if (statusCell) {
+                const span = statusCell.querySelector('span');
+                if (span) {
+                  if (data.is_active) {
+                    span.style.background = '#22c55e';
+                    span.textContent = 'Active';
+                  } else {
+                    span.style.background = '#ef4444';
+                    span.textContent = 'Inactive';
+                  }
+                }
+              }
+              alert(data.message);
+            } else {
+              alert('Error: ' + (data.error || 'Unknown error'));
+            }
+          }).catch(err => alert('Network error: ' + err));
+        }
+      });
+
+      // Edit slot
+      document.addEventListener('click', function(e){
+        if (e.target.classList.contains('slot-edit-btn')) {
+          const slotId = e.target.getAttribute('data-slot-id');
+          const row = e.target.closest('tr');
+          const cells = row.querySelectorAll('td');
+          
+          const currentDate = cells[0].textContent.trim();
+          const currentSubject = cells[1].textContent.trim() === '—' ? '' : cells[1].textContent.trim();
+          const timeText = cells[2].textContent.trim();
+          const currentCapacity = cells[3].textContent.trim() === '—' ? '' : cells[3].textContent.trim();
+          
+          let startTime = '', endTime = '';
+          if (timeText && timeText !== '—') {
+            const parts = timeText.split(' - ');
+            startTime = parts[0] || '';
+            endTime = parts[1] || '';
+          }
+
+          const subject = prompt('Enter subject (leave blank for none):', currentSubject);
+          if (subject === null) return;
+
+          const capacity = prompt('Enter capacity (leave blank for unlimited):', currentCapacity);
+          if (capacity === null) return;
+
+          const newStartTime = prompt('Enter start time (HH:mm, leave blank for none):', startTime);
+          if (newStartTime === null) return;
+
+          const newEndTime = prompt('Enter end time (HH:mm, leave blank for none):', endTime);
+          if (newEndTime === null) return;
+
+          fetch(`/api/update_unlock_slot/${slotId}/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({
+              subject: subject,
+              start_time: newStartTime,
+              end_time: newEndTime,
+              capacity: capacity
+            })
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              alert('Slot updated successfully.');
+              window.location.reload();
+            } else {
+              alert('Error: ' + (data.error || 'Unknown error'));
+            }
+          }).catch(err => alert('Network error: ' + err));
+        }
+      });
+    })();
+
+    // Faculty rejection handler (AJAX - no redirect)
+    (function(){
+      function getCookie(name){
+        const v = `; ${document.cookie}`; 
+        const parts = v.split(`; ${name}=`); 
+        if (parts.length===2) return parts.pop().split(';').shift();
+      }
+
+      document.addEventListener('click', function(e){
+        if (e.target.classList.contains('reject-faculty-btn')) {
+          const username = e.target.getAttribute('data-username');
+          if (!confirm(`Are you sure you want to reject this faculty member?`)) return;
+          
+          fetch(`/api/reject_faculty/${encodeURIComponent(username)}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCookie('csrftoken') }
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              // Find and remove the table row for this faculty
+              const row = e.target.closest('tr');
+              if (row) {
+                row.style.opacity = '0.5';
+                row.style.textDecoration = 'line-through';
+                // Or remove entirely after a delay
+                setTimeout(() => {
+                  row.remove();
+                }, 500);
+              }
+              alert(`Faculty ${username} rejected successfully.`);
+            } else {
+              alert('Error: ' + (data.error || 'Unknown error'));
+            }
+          })
+          .catch(err => alert('Network error: ' + err));
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

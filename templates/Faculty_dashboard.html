@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faculty Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#050914;
+      --surface:#0f1729;
+      --surface-2:#131d33;
+      --text:#e7ecf7;
+      --muted:#8f9bb8;
+      --accent:#7dd3ff;
+      --accent-2:#5b8cff;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      background:radial-gradient(1200px 600px at 15% -10%,rgba(125,211,255,.25),transparent 60%),
+                 radial-gradient(900px 500px at 85% -15%,rgba(91,140,255,.18),transparent 55%),
+                 var(--bg);
+      color:var(--text); min-height:100vh; padding:32px;
+    }
+    header{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:32px; flex-wrap:wrap; gap:16px;
+      background:var(--surface); padding:24px; border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 18px 40px rgba(5,9,20,.35);
+    }
+    h1{margin:0; font-size:1.9rem}
+    .btn{
+      border:none; border-radius:12px; padding:12px 18px;
+      font-weight:600; cursor:pointer; color:#041024;
+      background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    }
+    .grid{
+      display:grid; gap:24px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    }
+    .card{
+      background:var(--surface); border-radius:var(--radius);
+      padding:24px; border:1px solid rgba(255,255,255,.06);
+    }
+    .card h2{margin:0 0 14px; font-size:1.2rem}
+    .stat{
+      font-size:2.4rem; font-weight:600;
+      color:var(--accent);
+    }
+    ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px}
+    li{
+      background:var(--surface-2); padding:12px 14px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.04); font-size:.95rem;
+    }
+    .record{
+      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .empty{color:var(--muted); font-size:.95rem}
+    .header-actions{
+      display:flex; align-items:center; gap:18px;
+    }
+    .profile{
+      display:flex; align-items:center; gap:8px;
+      cursor:pointer; position:relative;
+    }
+    .profile .circle{
+      width:46px; height:46px; border-radius:50%;
+      background:var(--accent); color:#041024;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:1.1rem;
+      border:2px solid rgba(255,255,255,.25);
+      box-shadow:0 0 0 4px rgba(125,211,255,.18);
+    }
+    .profile-dropdown-content{
+      display:none; position:absolute; top:calc(100% + 10px); right:0;
+      background:var(--surface-2); border-radius:16px; min-width:200px;
+      border:1px solid rgba(255,255,255,.08); box-shadow:0 16px 40px rgba(0,0,0,.45);
+      padding:10px; z-index:50;
+    }
+    .profile-dropdown-content span{
+      display:block; padding:8px 10px; color:var(--muted); font-size:.9rem;
+    }
+    .profile-dropdown-content a{
+      display:block; padding:10px 12px; border-radius:10px;
+      color:var(--text); text-decoration:none; font-weight:500;
+    }
+    .profile-dropdown-content a:hover{
+      background:rgba(125,211,255,.15);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p style="color:var(--muted); margin:0 0 4px;">Welcome back,</p>
+      <h1>{{ faculty_username|default:"Faculty" }}</h1>
+    </div>
+    <div class="header-actions">
+      <a href="{% url 'faculty_results' %}" class="btn">Grade exams</a>
+      <div class="profile profile-dropdown" onclick="toggleFacultyProfile()">
+        <div class="circle">{{ faculty_username|default:"Faculty"|slice:":1"|upper }}</div>
+        <div class="profile-dropdown-content" id="faculty-profile-dropdown">
+          <span>Signed in as <strong>{{ faculty_username|default:"Faculty" }}</strong></span>
+          <a href="{% url 'faculty_logout' %}">Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="card">
+      <h2>My Assigned Subjects</h2>
+      {% if assigned_subjects %}
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+          {% for subject in assigned_subjects %}
+          <span style="display:inline-block;padding:8px 16px;background:rgba(91,140,255,.2);border-radius:8px;font-weight:600;color:var(--accent);">{{ subject }}</span>
+          {% endfor %}
+        </div>
+        <p style="color:var(--muted); margin:12px 0 0;font-size:.9rem;">You can grade exams for these subjects.</p>
+      {% else %}
+        <p style="color:var(--muted); margin-top:12px;">No subjects assigned yet. Please contact admin to get subjects assigned.</p>
+      {% endif %}
+    </section>
+    
+    <section class="card">
+      <h2>Total Registered Students</h2>
+      <div class="stat">{{ total_students }}</div>
+      <p style="color:var(--muted); margin:8px 0 0;">Based on active Django users.</p>
+    </section>
+
+    <section class="card">
+      <h2>Recently Joined Students</h2>
+      {% if recent_users %}
+        <ul>
+          {% for user in recent_users %}
+          <li>
+            <strong>{{ user.username }}</strong>
+            <div style="color:var(--muted); font-size:.9rem;">Joined: {{ user.date_joined|date:"M d, Y" }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">No users found.</p>
+      {% endif %}
+    </section>
+
+    <section class="card" style="grid-column:1 / -1;">
+      <h2>Latest Exam Records</h2>
+      {% if recent_records %}
+        <ul>
+          {% for record in recent_records %}
+          <li>
+            <div class="record">
+              <div>
+                <strong>{{ record.subject|default:"Unknown Subject" }}</strong><br>
+                <span style="color:var(--muted); font-size:.9rem;">Submitted by {{ record.username }}</span>
+              </div>
+              <div style="text-align:right;">
+                <div style="color:var(--muted); font-size:.85rem;">Saved at:</div>
+                <strong>{{ record.saved_at }}</strong>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty">No saved exams yet.</p>
+      {% endif %}
+    </section>
+  </div>
+  <script>
+    function toggleFacultyProfile(){
+      const menu = document.getElementById('faculty-profile-dropdown');
+      if (!menu) return;
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+    document.addEventListener('click', function(event){
+      const dropdown = document.getElementById('faculty-profile-dropdown');
+      if (!dropdown) return;
+      if (!event.target.closest('.profile-dropdown')){
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
+

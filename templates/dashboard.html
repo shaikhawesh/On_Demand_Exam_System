@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ExamEase – Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121a2b;
+      --muted:#93a1bd;
+      --text:#e7ecf7;
+      --brand:#5b8cff;
+      --brand-2:#7dd3ff;
+      --ring:rgba(125,211,255,.3);
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      background: radial-gradient(1200px 600px at 20% -10%,rgba(93,155,255,.25),transparent 60%),
+                  radial-gradient(900px 500px at 80% -10%,rgba(125,211,255,.18),transparent 55%),
+                  var(--bg);
+      color:var(--text); line-height:1.6;
+      display:flex; justify-content:center; align-items:center; height:100vh; padding:20px;
+    }
+    .card{
+      background:var(--card); border:1px solid rgba(255,255,255,.06);
+      border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:32px; max-width:420px; width:100%; text-align:center;
+    }
+    h2{margin:0 0 18px; font-size:1.6rem}
+    .btn{
+      display:inline-block; padding:12px 16px; border-radius:12px; border:none;
+      font-weight:600; cursor:pointer; transition:.2s; text-decoration:none;
+    }
+    .btn--primary{
+      background:linear-gradient(135deg,var(--brand),var(--brand-2));
+      color:#041024; box-shadow:0 6px 20px var(--ring);
+    }
+    .btn--primary:hover{opacity:.9}
+  </style>
+</head>
+<body>
+  <div class="card">
+  <h2>Welcome, {{ request.user.profile.display_name|default:request.user.username }}</h2>
+    <a href="{% url 'logout' %}" class="btn btn--primary">Logout</a>
+  </div>
+</body>
+</html>
